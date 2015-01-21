@@ -1,0 +1,13 @@
+extends ./layout.jade
+
+
+//- block link
+  //- a.new_post(href="/new_blog") NEW BLOG
+
+block homepage
+  div.homepage_signin
+    //- a(href="https://api.instagram.com/oauth/authorize/?client_id=6ef3fe178e4a46f58ae6f7c4efc4ce8f&redirect_uri=https://icymi.ngrok.com/instagram&response_type=code&scope=likes+comments")
+      | Login with Instagram
+
+    a(href="/auth/instagram") Login with Instagram
+
