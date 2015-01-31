@@ -1,5 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
+var http = require('http');
 var https = require('https');
 var app = express();
 var passport = require('passport')
@@ -100,7 +101,7 @@ app.get('/auth/instagram/callback',
 app.get('/instagram', function (req, res) {
 
   https.get("https://api.instagram.com/v1/users/self/feed?access_token=" + access_token, function(resp) {
-    console.log("statusCode: ", resp.statusCode);
+    // console.log("statusCode: ", resp.statusCode);
     console.log("headers: ", resp.headers);
 
     resp.on('data', function(d) {
@@ -112,6 +113,8 @@ app.get('/instagram', function (req, res) {
   }).on('error', function(e) {
     console.error(e);
   });
+
+
 
 
 })
