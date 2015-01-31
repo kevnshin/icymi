@@ -1,7 +1,5 @@
 var passport = require('passport');
 var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
-var LocalStrategy = require('passport-local').Strategy;
-// var TwitterStrategy = require('passport-twitter').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
 var mongoose = require('mongoose');
 var flash = require ('connect-flash');
@@ -21,9 +19,15 @@ passport.use(new InstagramStrategy({
  callbackURL: config.instagram.callbackURL,
 },
 function(accessToken, refreshToken, profile, done) {
-  access_token = accessToken;
-  console.log("accesstoken", access_token);
-  console.log("profile", profile);
+
+  var new_user = new User.IG_profile ({
+    fullname: profile.displayName,
+    username: profile.username,
+    accesstoken: accessToken,
+  })
+
+  console.log(new_user);
+
   process.nextTick(function () {
   return done(null, profile);
  });
@@ -35,7 +39,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-  User.findById(user._id, function(err, user) {
+  User.IG_profile.findById(user._id, function(err, user) {
     done(null, user);
   });
 });

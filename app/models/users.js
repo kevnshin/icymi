@@ -1,11 +1,13 @@
 var mongoose = require('mongoose');
 
 var userSchema = mongoose.Schema({
-  name: String,
+  fullname: String,
+  username: String,
   accesstoken: String,
-  instagram_id: String,
 });
 
-var User = mongoose.model('User', userSchema);
+var IG_profile = mongoose.model('User', userSchema);
 
-module.exports = User;
+module.exports = {
+  IG_profile: IG_profile
+}
