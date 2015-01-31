@@ -1,9 +1,8 @@
 function routes (app) {
   var passport = require('passport');
 
-
   //MODELS
-
+  var User = require('../models/users.js');
 
   //CONTROLLERS
   var auth = require('../controllers/auth.js');
@@ -19,13 +18,12 @@ function routes (app) {
       res.redirect('/instagram');
     }
   );
+
   app.get('/logout', auth.logout);
 
   //FEED ROUTES
   app.get('/', feed.view_home_page);
-  app.get('/instagram', feed.get_instagram_data);
-
-
+  app.get('/instagram', feed.view_instagram);
 
 
 }

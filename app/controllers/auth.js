@@ -3,9 +3,11 @@ var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 // var TwitterStrategy = require('passport-twitter').Strategy;
 var InstagramStrategy = require('passport-instagram').Strategy;
-// var mongoose = require('mongoose');
+var mongoose = require('mongoose');
 var flash = require ('connect-flash');
 
+//MODELS
+var User = require('../models/users.js');
 
 
 var config = require('../config.json');
@@ -23,20 +25,19 @@ function(accessToken, refreshToken, profile, done) {
   console.log("accesstoken", access_token);
   console.log("profile", profile);
   process.nextTick(function () {
-   return done(null, profile);
+  return done(null, profile);
  });
 }
 ));
 
 passport.serializeUser(function(user, done) {
-  // console.log("serialize", user);
   done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-  // User.findById(user._id, function(err, user) {
+  User.findById(user._id, function(err, user) {
     done(null, user);
-  // });
+  });
 });
 
 //FUNCTIONS
@@ -52,8 +53,6 @@ function ensureAuthenticated (req, res, next) {
   req.flash("warn", "You must be logged-in to do that.");
   res.redirect('/login');
 };
-
-
 
 
 function logout (req, res) {
