@@ -76,10 +76,6 @@ function logout (req, res) {
   res.redirect('/');
 }
 
-function get_access_token () {
-  return access_token;
-}
-
 
 module.exports = {
   ensureAuthenticated: ensureAuthenticated,

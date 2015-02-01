@@ -10,7 +10,7 @@ function view_instagram (req, res) {
 
   console.log("req.user", req.user);
 
-  https.get("https://api.instagram.com/v1/users/self/feed?access_token=" + auth.access_token(), function(resp) {
+  https.get("https://api.instagram.com/v1/users/self/feed?access_token=" + req.user.token.accesstoken, function(resp) {
     // console.log("headers: ", resp.headers);
 
     resp.on('data', function(d) {
