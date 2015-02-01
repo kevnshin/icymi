@@ -1,5 +1,6 @@
 extends ./layout.jade
 
 block instagram_feed
-  p You are logged in via Instagram!
-  a.embed(href="http://instagram.com/p/rTL56_tMKa/")
+  div.post_container
+    each post in posts
+      a.embed(href=post.url)

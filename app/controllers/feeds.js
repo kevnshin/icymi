@@ -24,25 +24,23 @@ function view_instagram (req, res) {
         }
 
         likes.push(photos[i].likes.count);
-
         photos_data.push(photo_data);
-
         top_posts = photos_data;
-
 
       };
 
-      while( likes.length > 5 ) {
+      while( likes.length > 6 ) {
         var index = likes.indexOf(getMinOfArray(likes));
         likes.splice(index,1);
         top_posts.splice(index,1);
-        console.log("likes",likes);
-        console.log("top_posts",top_posts);
-
       }
 
-      console.log("photos_data", photos_data);
-      res.render('instagram_feed');
+      var locals = {
+        posts: top_posts
+      }
+
+      console.log(top_posts);
+      res.render('instagram_feed', locals);
     } else {
       res.send("Oops, it looks like you BROKE OUR WEBSITE!");
     }
