@@ -9,27 +9,48 @@ function home_page (req, res) {
 function view_instagram (req, res) {
   var url = "https://api.instagram.com/v1/users/self/feed?access_token=";
 
-  request( url + req.user.token.accesstoken + "&count=30", function (error, response, body) {
+  request( url + req.user.token.accesstoken + "&count=200", function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      // console.log("body", JSON.parse(body).data.length);
-      // console.log("response",response);
+
       var photos = JSON.parse(body).data;
-      // console.log(JSON.parse(body).data[0].likes);
       var photos_data = [];
+      var top_posts = [];
+      var likes = [];
+      console.log("photos.length",photos.length);
       for (var i = 0; i < photos.length; i++) {
         var photo_data = {
           likes: photos[i].likes.count,
           url: photos[i].link
         }
+
+        likes.push(photos[i].likes.count);
+
         photos_data.push(photo_data);
+
+        top_posts = photos_data;
+
+
       };
 
-      console.log(photos_data);
+      while( likes.length > 5 ) {
+        var index = likes.indexOf(getMinOfArray(likes));
+        likes.splice(index,1);
+        top_posts.splice(index,1);
+        console.log("likes",likes);
+        console.log("top_posts",top_posts);
+
+      }
+
+      console.log("photos_data", photos_data);
       res.render('instagram_feed');
     } else {
       res.send("Oops, it looks like you BROKE OUR WEBSITE!");
     }
   })
+}
+
+function getMinOfArray(numArray) {
+    return Math.min.apply(null, numArray);
 }
 
 module.exports = {
