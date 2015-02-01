@@ -3,5 +3,4 @@ $(function() {
   $("a.embed").oembed();
 
 
-
 });

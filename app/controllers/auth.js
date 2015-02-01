@@ -5,32 +5,44 @@ var mongoose = require('mongoose');
 var flash = require ('connect-flash');
 
 //MODELS
-var User = require('../models/users.js');
-
+var Account = require('../models/accounts.js');
 
 var config = require('../config.json');
 
 //Passport Area_
-var access_token;
 
 passport.use(new InstagramStrategy({
- clientID: config.instagram.clientID,
- clientSecret: config.instagram.clientSecret,
- callbackURL: config.instagram.callbackURL,
+  clientID: config.instagram.clientID,
+  clientSecret: config.instagram.clientSecret,
+  callbackURL: config.instagram.callbackURL,
+  passReqToCallback: true
 },
-function(accessToken, refreshToken, profile, done) {
+function(req, accessToken, refreshToken, profile, done) {
+  var raw_data = JSON.parse(profile._raw).data;
 
-  var new_user = new User.IG_profile ({
-    fullname: profile.displayName,
-    username: profile.username,
-    accesstoken: accessToken,
-  })
+  Account.findOne({domain: 'instagram.com', uid: raw_data.id}, function(err, account) {
+    if (err) { return done(err); }
+    if (account) { return done(null, account); }
 
-  console.log(new_user);
+    var account = new Account();
+    account.fullname = raw_data.full_name;
+    account.username = raw_data.username;
+    account.domain = 'instagram.com';
+    account.service_id = raw_data.id;
+    account.token = { kind: 'oauth', accesstoken: accessToken };
 
-  process.nextTick(function () {
-  return done(null, profile);
- });
+    account.save(function (err, user) {
+      if (err) {
+        throw err;
+      }
+      req.logIn(user, function(err){
+        if (err) { return next(err); }
+      });
+    });
+
+    return done(null, account);
+  });
+
 }
 ));
 
@@ -39,7 +51,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-  User.IG_profile.findById(user._id, function(err, user) {
+  Account.findById(user._id, function(err, user) {
     done(null, user);
   });
 });
@@ -70,7 +82,6 @@ function get_access_token () {
 
 
 module.exports = {
-  access_token: get_access_token,
   ensureAuthenticated: ensureAuthenticated,
   logout: logout,
 };

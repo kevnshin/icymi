@@ -2,19 +2,20 @@ var https = require('https');
 var auth = require('../controllers/auth.js');
 
 function home_page (req, res) {
-  res.render('index', { user: req.user });
+  res.render('index');
 }
 
 
 function view_instagram (req, res) {
 
-  console.log("In feed:", auth.access_token);
+  console.log("req.user", req.user);
+
   https.get("https://api.instagram.com/v1/users/self/feed?access_token=" + auth.access_token(), function(resp) {
     // console.log("headers: ", resp.headers);
 
-    // resp.on('data', function(d) {
-    //   process.stdout.write(d);
-    // });
+    resp.on('data', function(d) {
+      process.stdout.write(d);
+    });
 
     res.render('instagram_feed');
 

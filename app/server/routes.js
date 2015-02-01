@@ -1,8 +1,6 @@
 function routes (app) {
   var passport = require('passport');
 
-  //MODELS
-  var User = require('../models/users.js');
 
   //CONTROLLERS
   var auth = require('../controllers/auth.js');
